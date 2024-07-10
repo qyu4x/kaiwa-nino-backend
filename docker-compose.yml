@@ -1,0 +1,34 @@
+version: '3.9'
+services:
+  kaiwa-postgres:
+    image: postgres:14.11-alpine3.18
+    container_name: ms_kaiwa_postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: neko
+      POSTGRES_PASSWORD: neko
+      PGDATA: /data/postgres
+    volumes:
+      - kaiwa-pg-slaves:/data/postgres
+    networks:
+      - kaiwa-networks
+
+  kaiwa-mongo:
+    image: mongo
+    container_name: ms_kaiwa_mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - kaiwa-mongo-slaves:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=neko
+      - MONGO_INITDB_ROOT_PASSWORD=neko
+
+networks:
+  kaiwa-networks:
+    driver: bridge
+
+volumes:
+  kaiwa-pg-slaves:
+  kaiwa-mongo-slaves:

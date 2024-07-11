@@ -4,7 +4,7 @@ services:
     image: postgres:14.11-alpine3.18
     container_name: ms_kaiwa_postgres
     ports:
-      - 5432:5432
+      - 5433:5432
     environment:
       POSTGRES_USER: neko
       POSTGRES_PASSWORD: neko

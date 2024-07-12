@@ -28,7 +28,6 @@ public class UserServiceImpl implements UserService {
     public UserResponse create(UserRequest userRequest) {
         userRepository.findByEmailAndIsActiveIsTrue(userRequest.getEmail())
                 .ifPresent(user ->  {
-                    System.out.println("executed here " + user.getEmail());
                     throw new DataAlreadyExistsException("Email already exists");
                 });
 
@@ -64,5 +63,11 @@ public class UserServiceImpl implements UserService {
 
         user.setIsActive(false);
         userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public Boolean existById(String userId) {
+        return userRepository.existsByIdAndIsActiveTrue(userId);
     }
 }

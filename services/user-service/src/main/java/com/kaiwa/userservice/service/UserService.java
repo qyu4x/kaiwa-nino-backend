@@ -11,4 +11,6 @@ public interface UserService {
     List<UserResponse> findAll();
 
     void deleteById(String userId);
+
+    Boolean existById(String userId);
 }

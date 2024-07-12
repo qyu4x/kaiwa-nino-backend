@@ -63,4 +63,15 @@ public class UserController {
                 .data("OK")
                 .build());
     }
+
+    @GetMapping(
+            path = "/{userId}/exists",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    private ResponseEntity<WebResponse<Boolean>> existsById(@PathVariable(value = "userId", required = true) String userId) {
+        Boolean userResponse = userService.existById(userId);
+        return ResponseEntity.ok(WebResponse.<Boolean>builder()
+                .data(userResponse)
+                .build());
+    }
 }

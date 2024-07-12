@@ -4,6 +4,7 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 import java.time.Instant;
+import java.util.Objects;
 
 @Converter
 public class InstantToLongConverter implements AttributeConverter<Instant, Long> {
@@ -14,6 +15,9 @@ public class InstantToLongConverter implements AttributeConverter<Instant, Long>
 
     @Override
     public Instant convertToEntityAttribute(Long aLong) {
+        if (Objects.isNull(aLong)) {
+            return null;
+        }
         return Instant.ofEpochMilli(aLong);
     }
 }

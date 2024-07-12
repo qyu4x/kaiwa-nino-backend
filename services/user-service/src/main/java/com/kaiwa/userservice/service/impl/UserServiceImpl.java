@@ -10,6 +10,7 @@ import com.kaiwa.userservice.repository.UserRepository;
 import com.kaiwa.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,9 +24,11 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
+    @Transactional
     public UserResponse create(UserRequest userRequest) {
         userRepository.findByEmailAndIsActiveIsTrue(userRequest.getEmail())
                 .ifPresent(user ->  {
+                    System.out.println("executed here " + user.getEmail());
                     throw new DataAlreadyExistsException("Email already exists");
                 });
 
@@ -39,12 +42,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponse findById(String userId) {
         return userMapper.toUserResponse(userRepository.findByIdAndIsActiveTrue(userId)
                 .orElseThrow(() -> new DataNotFoundException("User not found")));
     }
 
     @Override
+    @Transactional
     public List<UserResponse> findAll() {
         return userRepository.findAllByIsActiveIsTrue().stream()
                 .map(userMapper::toUserResponse)
@@ -52,6 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteById(String userId) {
         User user = userRepository.findByIdAndIsActiveTrue(userId)
                 .orElseThrow(() -> new DataNotFoundException("User not found"));

@@ -8,4 +8,5 @@ import java.util.List;
 public interface ContactService {
     ContactResponse create(ContactRequest createContactRequest);
     List<ContactResponse> findAllByUserId(String userId);
+    void blockContactById(String userId, String savedContactId);
 }

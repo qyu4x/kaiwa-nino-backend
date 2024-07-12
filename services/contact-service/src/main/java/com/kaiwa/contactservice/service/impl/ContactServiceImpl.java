@@ -66,4 +66,14 @@ public class ContactServiceImpl implements ContactService {
                 .map(contactMapper::toContactResponse)
                 .toList();
     }
+
+    @Override
+    @Transactional
+    public void blockContactById(String userId, String savedContactId) {
+        Contact contact = contactRepository.findByUserIdAndSavedContactIdAndIsActiveTrue(userId, savedContactId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        contact.setIsBlocked(true);
+        contactRepository.save(contact);
+    }
 }

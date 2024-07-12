@@ -42,4 +42,15 @@ public class ContactController {
                 .build());
     }
 
+    @PatchMapping(
+            path = "/{userId}/block/{savedContactId}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<WebResponse<String>> blockContactById(@PathVariable(value = "userId", required = true) String userId,
+                                                                               @PathVariable(value = "savedContactId", required = true) String savedContactId) {
+        contactService.blockContactById(userId, savedContactId);
+        return ResponseEntity.ok(WebResponse.<String>builder()
+                .data("OK")
+                .build());
+    }
 }

@@ -18,7 +18,7 @@ services:
     image: mongo
     container_name: ms_kaiwa_mongo
     ports:
-      - 27017:27017
+      - 27018:27017
     volumes:
       - kaiwa-mongo-slaves:/data
     environment:

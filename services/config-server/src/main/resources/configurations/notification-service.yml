@@ -1,0 +1,12 @@
+server:
+  port: 8030
+spring:
+  data:
+    mongodb:
+      username: neko
+      password: neko
+      host: localhost
+      port: 27018
+      database: notifications
+      authentication-database: admin
+      uri: mongodb://${spring.data.mongodb.host}:${spring.data.mongodb.port}/notifications

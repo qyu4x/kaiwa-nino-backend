@@ -1,9 +1,9 @@
 server:
-  port: 8000
+  port: 8020
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5433/user_service
+    url: jdbc:postgresql://localhost:5433/message_service
     username: neko
     password: neko
     type: com.zaxxer.hikari.HikariDataSource

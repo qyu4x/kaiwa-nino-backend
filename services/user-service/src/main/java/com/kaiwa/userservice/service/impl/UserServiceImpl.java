@@ -25,10 +25,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse create(UserRequest userRequest) {
         userRepository.findByEmailAndIsActiveIsTrue(userRequest.getEmail())
-                .orElseThrow(() -> new DataAlreadyExistsException("Email already exists"));
+                .ifPresent(user ->  {
+                    throw new DataAlreadyExistsException("Email already exists");
+                });
 
         userRepository.findByUsernameAndIsActiveIsTrue(userRequest.getUsername())
-                .orElseThrow(() -> new DataAlreadyExistsException("Username already exists"));
+                .ifPresent(user -> {
+                    throw new DataAlreadyExistsException("Username already exists");
+                });
 
         User user = userMapper.toUser(userRequest);
         return userMapper.toUserResponse(userRepository.save(user));

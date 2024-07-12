@@ -18,6 +18,9 @@ public class Chat extends AuditableEntity{
     @Id
     private String id;
 
+    @Column(name = "room_id")
+    private String roomId;
+
     @Column(name = "user_sender_id")
     private String userSenderId;
 

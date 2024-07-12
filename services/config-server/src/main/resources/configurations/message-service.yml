@@ -37,3 +37,9 @@ eureka:
     fetch-registry: true
     service-url:
       default-zone: http://${eureka.instance.hostname}:${8761}
+
+application:
+  config:
+    user-url: http://localhost:8000/api/v1/users
+    contact-url: http://localhost:8010/api/v1/contacts
+    message-url: http://localhost:8020/api/v1/messages

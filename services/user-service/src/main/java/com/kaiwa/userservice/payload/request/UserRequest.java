@@ -1,5 +1,6 @@
 package com.kaiwa.userservice.payload.request;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -13,6 +14,7 @@ public class UserRequest {
     @NotBlank(message = "Username is required")
     private String username;
 
+    @Email
     @NotBlank(message = "Email is required")
     private String email;
 

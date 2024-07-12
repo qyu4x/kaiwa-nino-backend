@@ -10,12 +10,12 @@ import com.kaiwa.contactservice.repository.ContactRepository;
 import com.kaiwa.contactservice.service.ContactService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -57,5 +57,13 @@ public class ContactServiceImpl implements ContactService {
 
         Contact contact = contactMapper.toContact(contactRequest);
         return contactMapper.toContactResponse(contactRepository.save(contact));
+    }
+
+    @Override
+    @Transactional
+    public List<ContactResponse> findAllByUserId(String userId) {
+        return contactRepository.findAllByUserIdAndIsActiveTrue(userId).stream()
+                .map(contactMapper::toContactResponse)
+                .toList();
     }
 }

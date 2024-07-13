@@ -11,18 +11,14 @@ import com.kaiwa.messageservice.payload.request.ChatRequest;
 import com.kaiwa.messageservice.payload.response.ChatResponse;
 import com.kaiwa.messageservice.repository.ChatRepository;
 import com.kaiwa.messageservice.service.ChatService;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -65,13 +61,6 @@ public class ChatServiceImpl implements ChatService {
 
         return Objects.requireNonNull(userResponse.getBody()).getData();
     }
-
-//    public Chat isChatRoomAvailable(String userSenderId, String userRecipientId) {
-//        System.out.println("here 1-1");
-//        return chatRepository.findByUserSenderIdAndUserRecipientId(userSenderId, userRecipientId)
-//                .orElse(Chat.builder().build());
-//    }
-
 
     @Override
     @Transactional

@@ -23,7 +23,7 @@ public class ChatMapper {
                 .userSenderId(chatRequest.getUserSenderId())
                 .userRecipientId(chatRequest.getUserRecipientId())
                 .message(chatRequest.getMessage())
-                .readAt(Instant.MIN)
+                .readAt(0L)
                 .isActive(true)
                 .build();
     }
@@ -35,7 +35,7 @@ public class ChatMapper {
                 .userSenderId(chat.getUserSenderId())
                 .userRecipientId(chat.getUserRecipientId())
                 .message(chat.getMessage())
-                .readAt(chat.getReadAt().toEpochMilli())
+                .readAt(chat.getReadAt())
                 .isActive(chat.getIsActive())
                 .createdAt(chat.getCreatedAt().toEpochMilli())
                 .build();

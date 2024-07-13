@@ -4,6 +4,7 @@ import com.kaiwa.messageservice.converter.InstantToLongConverter;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 @AllArgsConstructor
@@ -12,8 +13,9 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
+@ToString
 @Table(name = "chats")
-public class Chat extends AuditableEntity{
+public class Chat extends AuditableEntity implements Serializable {
 
     @Id
     private String id;
@@ -32,8 +34,7 @@ public class Chat extends AuditableEntity{
     private String message;
 
     @Column(name = "read_at")
-    @Convert(converter = InstantToLongConverter.class)
-    private Instant readAt;
+    private Long readAt;
 
     @Column(name = "is_active")
     private Boolean isActive;

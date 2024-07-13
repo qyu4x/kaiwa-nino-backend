@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public UserResponse findById(String userId) {
         return userMapper.toUserResponse(userRepository.findByIdAndIsActiveTrue(userId)
                 .orElseThrow(() -> new DataNotFoundException("User not found")));

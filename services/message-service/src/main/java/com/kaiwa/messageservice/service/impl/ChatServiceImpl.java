@@ -11,17 +11,23 @@ import com.kaiwa.messageservice.payload.request.ChatRequest;
 import com.kaiwa.messageservice.payload.response.ChatResponse;
 import com.kaiwa.messageservice.repository.ChatRepository;
 import com.kaiwa.messageservice.service.ChatService;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChatServiceImpl implements ChatService {
@@ -49,16 +55,23 @@ public class ChatServiceImpl implements ChatService {
 
     private UserResponse findUserById(String userId) {
         ResponseEntity<ApiResponse<UserResponse>> userResponse = userClient.findById(userId);
-        if (userResponse.getStatusCode().is5xxServerError()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops error, please contact admin!");
-        }
-
         if (userResponse.getStatusCode().is4xxClientError()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
+        if (userResponse.getStatusCode().is5xxServerError()) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops error, please contact admin!");
+        }
+
         return Objects.requireNonNull(userResponse.getBody()).getData();
     }
+
+//    public Chat isChatRoomAvailable(String userSenderId, String userRecipientId) {
+//        System.out.println("here 1-1");
+//        return chatRepository.findByUserSenderIdAndUserRecipientId(userSenderId, userRecipientId)
+//                .orElse(Chat.builder().build());
+//    }
+
 
     @Override
     @Transactional
@@ -71,14 +84,22 @@ public class ChatServiceImpl implements ChatService {
         UserResponse userRecipientResponse = findUserById(chatRequest.getUserRecipientId());
         checkContactExists(chatRequest.getUserSenderId(), chatRequest.getUserRecipientId());
 
-        Chat chatResponse = chatRepository.findByUserSenderIdAndUserRecipientId(chatRequest.getUserSenderId(), chatRequest.getUserRecipientId())
-                .orElse(null);
-        String roomId = Objects.nonNull(chatResponse) ? chatResponse.getRoomId() : UUID.randomUUID().toString();
-
         Chat chat = chatMapper.toChat(chatRequest);
-        chat.setRoomId(roomId);
+        chat.setRoomId(UUID.randomUUID().toString());
+
+        List<Chat> isRoomAvailableResponse = chatRepository
+                .findByUserSenderIdAndUserRecipientIdOrUserSenderIdAndUserRecipientId(
+                        chatRequest.getUserSenderId(),
+                        chatRequest.getUserRecipientId(),
+                        chatRequest.getUserRecipientId(),
+                        chatRequest.getUserSenderId());
+
+        if (!isRoomAvailableResponse.isEmpty()) {
+            chat.setRoomId(isRoomAvailableResponse.get(0).getRoomId());
+        }
 
         Chat createdChatResponse = chatRepository.save(chat);
+
         notificationProducer.sendMessageNotification(
                 chatMapper.toMessageNotificationRequest(userSenderResponse, userRecipientResponse, createdChatResponse));
     }
@@ -91,3 +112,4 @@ public class ChatServiceImpl implements ChatService {
                 .toList();
     }
 }
+

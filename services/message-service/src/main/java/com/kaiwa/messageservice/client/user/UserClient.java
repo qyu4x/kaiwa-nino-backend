@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(
-        name = "user-service",
+        name = "fetch-user-service",
         url = "${application.config.user-url}"
 )
 public interface UserClient {

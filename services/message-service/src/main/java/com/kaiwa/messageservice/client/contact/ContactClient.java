@@ -1,7 +1,6 @@
 package com.kaiwa.messageservice.client.contact;
 
 import com.kaiwa.messageservice.client.exchange.ApiResponse;
-import com.kaiwa.messageservice.client.exchange.contact.ContactResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

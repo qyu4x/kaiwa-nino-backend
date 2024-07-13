@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ public class ErrorController {
                 .body(ErrorResponse.<String>builder()
                         .apiPath(request.getRequestURI())
                         .errorCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                        .errorMessage(exception.getMessage())
+                        .errorMessage(Arrays.toString(exception.getStackTrace()))
                         .errorTime(LocalDateTime.now())
                         .build());
     }

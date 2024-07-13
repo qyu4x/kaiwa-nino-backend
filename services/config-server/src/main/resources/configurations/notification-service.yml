@@ -10,3 +10,14 @@ spring:
       database: notifications
       authentication-database: admin
       uri: mongodb://${spring.data.mongodb.host}:${spring.data.mongodb.port}/notifications
+
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: messageGroup
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: '*'
+        spring.json.type.mapping: messageNotification:com.kaiwa.notificationservice.event.message.exchange.MessageNotification

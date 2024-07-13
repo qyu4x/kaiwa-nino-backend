@@ -1,4 +1,4 @@
-package com.kaiwa.notificationservice.client.message;
+package com.kaiwa.notificationservice.event.message.exchange;
 
 import lombok.*;
 

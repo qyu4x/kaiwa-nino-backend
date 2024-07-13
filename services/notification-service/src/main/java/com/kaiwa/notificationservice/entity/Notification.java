@@ -1,15 +1,14 @@
 package com.kaiwa.notificationservice.entity;
 
-import com.kaiwa.notificationservice.client.message.MessageSent;
-import com.kaiwa.notificationservice.client.message.UserRecipient;
-import com.kaiwa.notificationservice.client.message.UserSender;
+import com.kaiwa.notificationservice.event.message.exchange.MessageSent;
+import com.kaiwa.notificationservice.event.message.exchange.UserRecipient;
+import com.kaiwa.notificationservice.event.message.exchange.UserSender;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -29,10 +28,12 @@ public class Notification {
 
     private MessageSent message;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
+    private Long sentFromBrokerAt;
 
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+    private Long receivedByConsumerAt;
+
+    private Long createdAt;
+
+    private Long updatedAt;
 
 }

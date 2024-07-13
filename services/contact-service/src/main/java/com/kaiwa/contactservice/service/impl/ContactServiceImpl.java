@@ -69,6 +69,19 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
+    public ContactResponse findById(String userId, String savedContactId) {
+        return contactRepository.findByUserIdAndSavedContactIdAndIsActiveTrue(userId, savedContactId)
+                .map(contactMapper::toContactResponse)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    }
+
+    @Override
+    public Boolean existsById(String userId, String savedContactId) {
+        return contactRepository.existsByUserIdAndSavedContactIdAndIsActiveTrue(userId, savedContactId);
+    }
+
+    @Override
+    @Transactional
     public void blockContactById(String userId, String savedContactId) {
         Contact contact = contactRepository.findByUserIdAndSavedContactIdAndIsActiveTrue(userId, savedContactId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));

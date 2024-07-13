@@ -1,4 +1,4 @@
-package com.kaiwa.notificationservice.client.message;
+package com.kaiwa.messageservice.event.notification.exchange;
 
 import lombok.*;
 
@@ -7,12 +7,13 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
-public class MessageSent {
+public class MessageSentRequest {
 
     private String id;
 
     private String message;
 
     private Long createdAt;
+
 
 }

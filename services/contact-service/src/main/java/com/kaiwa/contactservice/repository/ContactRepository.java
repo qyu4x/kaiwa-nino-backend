@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface ContactRepository extends JpaRepository<Contact, String> {
     Optional<Contact> findByUserIdAndSavedContactIdAndIsActiveTrue(String userId, String savedContactId);
     List<Contact> findAllByUserIdAndIsActiveTrue(String userId);
+    Boolean existsByUserIdAndSavedContactIdAndIsActiveTrue(String userId, String savedContactId);
 }

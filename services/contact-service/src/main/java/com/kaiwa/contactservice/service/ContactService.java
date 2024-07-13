@@ -8,5 +8,9 @@ import java.util.List;
 public interface ContactService {
     ContactResponse create(ContactRequest createContactRequest);
     List<ContactResponse> findAllByUserId(String userId);
+
+    ContactResponse findById(String userId, String savedContactId);
+
+    Boolean existsById(String userId, String savedContactId);
     void blockContactById(String userId, String savedContactId);
 }

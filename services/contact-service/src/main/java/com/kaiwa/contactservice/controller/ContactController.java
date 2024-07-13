@@ -42,12 +42,36 @@ public class ContactController {
                 .build());
     }
 
+    @GetMapping(
+            path = "/{userId}/saved/{savedContactId}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<WebResponse<ContactResponse>> findByUserAndSavedContactId(@PathVariable(value = "userId", required = true) String userId,
+                                                                                    @PathVariable(value = "savedContactId", required = true) String savedContactId) {
+        ContactResponse contactResponses = contactService.findById(userId, savedContactId);
+        return ResponseEntity.ok(WebResponse.<ContactResponse>builder()
+                .data(contactResponses)
+                .build());
+    }
+
+    @GetMapping(
+            path = "/{userId}/exists/{savedContactId}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<WebResponse<Boolean>> existsByUserAndSavedContactId(@PathVariable(value = "userId", required = true) String userId,
+                                                                              @PathVariable(value = "savedContactId", required = true) String savedContactId) {
+        Boolean contactResponse = contactService.existsById(userId, savedContactId);
+        return ResponseEntity.ok(WebResponse.<Boolean>builder()
+                .data(contactResponse)
+                .build());
+    }
+
     @PatchMapping(
             path = "/{userId}/block/{savedContactId}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<WebResponse<String>> blockContactById(@PathVariable(value = "userId", required = true) String userId,
-                                                                               @PathVariable(value = "savedContactId", required = true) String savedContactId) {
+                                                                @PathVariable(value = "savedContactId", required = true) String savedContactId) {
         contactService.blockContactById(userId, savedContactId);
         return ResponseEntity.ok(WebResponse.<String>builder()
                 .data("OK")

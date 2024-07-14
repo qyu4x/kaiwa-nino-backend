@@ -1,0 +1,30 @@
+server:
+  port: 8222
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: user-service
+          uri: lb:http://USER-SERVICE
+          predicates:
+            - Path=/api/v1/users/**
+        - id: contact-service
+          uri: lb:http://CONTACT-SERVICE
+          predicates:
+            - Path=/api/v1/contacts/**
+        - id: message-service
+          uri: lb:http://MESSAGE-SERVICE
+          predicates:
+            - Path=/api/v1/messages/**
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      default-zone: http://${eureka.instance.hostname}:${8761}

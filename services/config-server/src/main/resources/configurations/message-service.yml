@@ -27,13 +27,16 @@ spring:
     url: ${spring.datasource.url}
     user: ${spring.datasource.username}
     password: ${spring.datasource.password}
+#  kafka:
+#    producer:
+#      bootstrap-servers: localhost:9092
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+#      properties:
+#        spring.json.type.mapping: messageNotification:com.kaiwa.messageservice.event.notification.exchange.MessageNotificationRequest
+
   kafka:
-    producer:
-      bootstrap-servers: localhost:9092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      properties:
-        spring.json.type.mapping: messageNotification:com.kaiwa.messageservice.event.notification.exchange.MessageNotificationRequest
+    bootstrap-servers: localhost:9092
 
 eureka:
   instance:

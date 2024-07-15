@@ -40,6 +40,6 @@ eureka:
 
 application:
   config:
-    user-url: http://localhost:8000/api/v1/users
-    contact-url: http://localhost:8010/api/v1/contacts
-    message-url: http://localhost:8020/api/v1/messages
+    user-url: http://localhost:8222/api/v1/users
+    contact-url: http://localhost:8222/api/v1/contacts
+    message-url: http://localhost:8222/api/v1/messages

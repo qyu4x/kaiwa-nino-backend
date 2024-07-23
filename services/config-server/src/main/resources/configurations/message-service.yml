@@ -35,8 +35,8 @@ spring:
 #      properties:
 #        spring.json.type.mapping: messageNotification:com.kaiwa.messageservice.event.notification.exchange.MessageNotificationRequest
 
-  kafka:
-    bootstrap-servers: localhost:9092
+  nats:
+    bootstrap-servers: nats://localhost:4222
 
 eureka:
   instance:

@@ -1,24 +1,22 @@
 package com.kaiwa.messageservice.config;
 
-import org.apache.kafka.clients.admin.AdminClientConfig;
+import io.nats.client.Connection;
+import io.nats.client.Nats;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.core.KafkaAdmin;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
 
 @Configuration
-public class KafkaConfig {
+public class NatsConfig {
 
-    @Value("${spring.kafka.bootstrap-servers:localhost:9092}")
-    private String kafkaBootstrapServer;
+    @Value("${spring.nats.bootstrap-servers:nats://localhost:4222}")
+    private String natsBootstrapServer;
 
     @Bean
-    public KafkaAdmin kafkaAdmin() {
-        Map<String, Object> configs = new HashMap<>();
-        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBootstrapServer);
-        return new KafkaAdmin(configs);
+    public Connection natsConnection()
+            throws IOException, InterruptedException {
+        return Nats.connect(natsBootstrapServer);
     }
 }

@@ -1,5 +1,6 @@
 package com.kaiwa.messageservice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kaiwa.messageservice.payload.request.ChatRequest;
 import com.kaiwa.messageservice.payload.response.ChatResponse;
 import com.kaiwa.messageservice.payload.response.WebResponse;
@@ -10,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -23,7 +25,8 @@ public class ChatController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<WebResponse<String>> create(@RequestBody @Valid ChatRequest chatRequest) {
+    public ResponseEntity<WebResponse<String>> create(@RequestBody @Valid ChatRequest chatRequest)
+            throws IOException, InterruptedException {
         chatService.send(chatRequest);
         return ResponseEntity.ok(WebResponse.<String>builder()
                 .data("OK")

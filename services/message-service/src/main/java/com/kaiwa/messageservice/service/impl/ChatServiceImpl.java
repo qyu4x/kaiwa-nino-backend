@@ -1,5 +1,6 @@
 package com.kaiwa.messageservice.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kaiwa.messageservice.client.contact.ContactClient;
 import com.kaiwa.messageservice.client.exchange.ApiResponse;
 import com.kaiwa.messageservice.client.exchange.user.UserResponse;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -64,7 +66,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     @Transactional
-    public void send(ChatRequest chatRequest) {
+    public void send(ChatRequest chatRequest) throws IOException, InterruptedException {
         if (chatRequest.getUserSenderId().equals(chatRequest.getUserRecipientId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Sender and User Recipient must not be same!");
         }
@@ -76,15 +78,15 @@ public class ChatServiceImpl implements ChatService {
         Chat chat = chatMapper.toChat(chatRequest);
         chat.setRoomId(UUID.randomUUID().toString());
 
-        List<Chat> isRoomAvailableResponse = chatRepository
-                .findByUserSenderIdAndUserRecipientIdOrUserSenderIdAndUserRecipientId(
+        Chat isRoomAvailableResponse = chatRepository
+                .findFirstByUserSenderIdAndUserRecipientIdOrUserSenderIdAndUserRecipientId(
                         chatRequest.getUserSenderId(),
                         chatRequest.getUserRecipientId(),
                         chatRequest.getUserRecipientId(),
                         chatRequest.getUserSenderId());
 
-        if (!isRoomAvailableResponse.isEmpty()) {
-            chat.setRoomId(isRoomAvailableResponse.get(0).getRoomId());
+        if (Objects.nonNull(isRoomAvailableResponse)) {
+            chat.setRoomId(isRoomAvailableResponse.getRoomId());
         }
 
         Chat createdChatResponse = chatRepository.save(chat);

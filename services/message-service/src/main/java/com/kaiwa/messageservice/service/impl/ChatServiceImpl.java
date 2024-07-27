@@ -12,6 +12,7 @@ import com.kaiwa.messageservice.payload.request.ChatRequest;
 import com.kaiwa.messageservice.payload.response.ChatResponse;
 import com.kaiwa.messageservice.repository.ChatRepository;
 import com.kaiwa.messageservice.service.ChatService;
+import io.nats.client.JetStreamApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -66,7 +67,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     @Transactional
-    public void send(ChatRequest chatRequest) throws IOException, InterruptedException {
+    public void send(ChatRequest chatRequest) throws IOException, InterruptedException, JetStreamApiException {
         if (chatRequest.getUserSenderId().equals(chatRequest.getUserRecipientId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Sender and User Recipient must not be same!");
         }

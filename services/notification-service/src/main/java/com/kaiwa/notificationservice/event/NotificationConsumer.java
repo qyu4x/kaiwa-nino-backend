@@ -6,12 +6,11 @@ import com.kaiwa.notificationservice.entity.Notification;
 import com.kaiwa.notificationservice.event.message.exchange.MessageNotification;
 import com.kaiwa.notificationservice.helper.JsonConverter;
 import com.kaiwa.notificationservice.repository.NotificationRepository;
-import io.nats.client.Connection;
-import io.nats.client.Dispatcher;
-import io.nats.client.Subscription;
+import io.nats.client.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -32,15 +31,25 @@ public class NotificationConsumer {
 
     private final NotificationRepository notificationRepository;
 
-    private static final String NATS_SUBJECT = "message-subject";
+    private static final String STREAM_DURABLE = "message-durable";
+
+    private static final String STREAM_NAME = "message-stream";
+
+    private static final String NATS_SUBJECT = "notification";
 
     @PostConstruct
-    public void messageNotificationListener() throws IOException, InterruptedException {
-        Dispatcher dispatcher = natsConfig.natsConnection().createDispatcher();
-        dispatcher.subscribe(NATS_SUBJECT, msg -> {
+    public void messageNotificationListener() throws IOException, InterruptedException, JetStreamApiException {
+
+        Connection nc = natsConfig.natsConnection();
+        JetStream js = nc.jetStream();
+
+        PushSubscribeOptions so = PushSubscribeOptions.builder()
+                .durable(STREAM_DURABLE)
+                .build();
+
+        MessageHandler handler = (msg) -> {
             Long receivedAtConsumerAt = Instant.now().toEpochMilli();
             log.info(String.format("Consuming the message from message.notification Subject: %s at: %s", new String(msg.getData()), LocalDateTime.now()));
-
             try {
                 MessageNotification messageNotification = jsonConverter.jsonToMessageNotification(new String(msg.getData()));
                 notificationRepository.save(Notification.builder()
@@ -55,7 +64,13 @@ public class NotificationConsumer {
             } catch (JsonProcessingException exception) {
                 log.error("Error processing message: ", exception);
             }
-        });
+            msg.ack();
+        };
+
+        Dispatcher dispatcher = nc.createDispatcher(handler);
+        boolean autoAck = false;
+
+        js.subscribe(Strings.concat(NATS_SUBJECT, ".message"), dispatcher, handler, autoAck, so);
     }
 
 }

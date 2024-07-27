@@ -26,13 +26,19 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=neko
 
   nats:
-    image: nats:alpine
-    container_name: ms_nats
-    restart: always
+    image: nats:latest
+    container_name: ms_nats_server
     ports:
-      - 4222:4222 # client port
-      - 6222:6222 # cluster port
-      - 8223:8222 # monitoring port
+      - "4222:4222"
+      - "6222:6222"
+      - "8223:8222"
+    environment:
+      - "JS_ENABLE=true"
+    volumes:
+      - nats-data:/data
+    command: >
+      -js
+      --store_dir=/data
     networks:
       - kaiwa-networks
 
@@ -41,5 +47,6 @@ networks:
     driver: bridge
 
 volumes:
+  nats-data:
   kaiwa-pg-slaves:
   kaiwa-mongo-slaves:

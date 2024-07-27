@@ -5,6 +5,7 @@ import com.kaiwa.messageservice.payload.request.ChatRequest;
 import com.kaiwa.messageservice.payload.response.ChatResponse;
 import com.kaiwa.messageservice.payload.response.WebResponse;
 import com.kaiwa.messageservice.service.ChatService;
+import io.nats.client.JetStreamApiException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -26,7 +27,7 @@ public class ChatController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<WebResponse<String>> create(@RequestBody @Valid ChatRequest chatRequest)
-            throws IOException, InterruptedException {
+            throws IOException, InterruptedException, JetStreamApiException {
         chatService.send(chatRequest);
         return ResponseEntity.ok(WebResponse.<String>builder()
                 .data("OK")
